@@ -27,7 +27,8 @@ data. All objects will be fortified to produce a data frame. See
 
 A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
-will be used as the layer data.}
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{geom}{The geometric object to use display the data}
 
@@ -48,7 +49,7 @@ be vectorised.}
 
 \item{n}{Number of points to interpolate along}
 
-\item{args}{List of additional arguments to pass to \code{fun}}
+\item{args}{List of additional arguments passed on to the function defined by \code{fun}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
@@ -69,16 +70,6 @@ This stat makes it easy to superimpose a function on top of an existing plot.
 The function is called with a grid of evenly spaced values along the x axis,
 and the results are drawn (by default) with a line.
 }
-\section{Aesthetics}{
-
-\code{stat_function()} understands the following aesthetics (required aesthetics are in bold):
-\itemize{
-\item \code{group}
-\item \code{y}
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
-}
-
 \section{Computed variables}{
 
 \describe{

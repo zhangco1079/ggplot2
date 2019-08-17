@@ -47,7 +47,8 @@
 #'   `axis.ticks.y.left`, `axis.ticks.y.right`). `axis.ticks.*.*` inherits from
 #'   `axis.ticks.*` which inherits from `axis.ticks`, which in turn inherits
 #'   from `line`
-#' @param axis.ticks.length length of tick marks (`unit`)
+#' @param axis.ticks.length,axis.ticks.length.x,axis.ticks.length.x.top,axis.ticks.length.x.bottom,axis.ticks.length.y,axis.ticks.length.y.left,axis.ticks.length.y.right
+#' length of tick marks (`unit`)
 #' @param axis.line,axis.line.x,axis.line.x.top,axis.line.x.bottom,axis.line.y,axis.line.y.left,axis.line.y.right
 #'   lines along axes ([element_line()]). Specify lines along all axes (`axis.line`),
 #'   lines for each plane (using `axis.line.x` or `axis.line.y`), or individually
@@ -192,11 +193,20 @@
 #' )
 #'
 #' # Axes ----------------------------------------------------------------------
+#' # Change styles of axes texts and lines
 #' p1 + theme(axis.line = element_line(size = 3, colour = "grey80"))
 #' p1 + theme(axis.text = element_text(colour = "blue"))
 #' p1 + theme(axis.ticks = element_line(size = 2))
-#' p1 + theme(axis.ticks.length = unit(.25, "cm"))
+#'
+#' # Change the appearance of the y-axis title
 #' p1 + theme(axis.title.y = element_text(size = rel(1.5), angle = 90))
+#'
+#' # Make ticks point outwards on y-axis and inwards on x-axis
+#' p1 + theme(
+#'   axis.ticks.length.y = unit(.25, "cm"),
+#'   axis.ticks.length.x = unit(-.25, "cm"),
+#'   axis.text.x = element_text(margin = margin(t = .3, unit = "cm"))
+#' )
 #'
 #' \donttest{
 #' # Legend --------------------------------------------------------------------
@@ -275,6 +285,12 @@ theme <- function(line,
                   axis.ticks.y.left,
                   axis.ticks.y.right,
                   axis.ticks.length,
+                  axis.ticks.length.x,
+                  axis.ticks.length.x.top,
+                  axis.ticks.length.x.bottom,
+                  axis.ticks.length.y,
+                  axis.ticks.length.y.left,
+                  axis.ticks.length.y.right,
                   axis.line,
                   axis.line.x,
                   axis.line.x.top,
@@ -596,21 +612,38 @@ merge_element.element <- function(new, old) {
   new
 }
 
-# Combine the properties of two elements
-#
-# @param e1 An element object
-# @param e2 An element object which e1 inherits from
+#' Combine the properties of two elements
+#'
+#' @param e1 An element object
+#' @param e2 An element object from which e1 inherits
+#'
+#' @noRd
+#'
 combine_elements <- function(e1, e2) {
 
   # If e2 is NULL, nothing to inherit
-  if (is.null(e2) || inherits(e1, "element_blank"))  return(e1)
+  if (is.null(e2) || inherits(e1, "element_blank")) {
+    return(e1)
+  }
+
   # If e1 is NULL inherit everything from e2
-  if (is.null(e1)) return(e2)
+  if (is.null(e1)) {
+    return(e2)
+  }
+
+  # If neither of e1 or e2 are element_* objects, return e1
+  if (!inherits(e1, "element") && !inherits(e2, "element")) {
+    return(e1)
+  }
+
   # If e2 is element_blank, and e1 inherits blank inherit everything from e2,
   # otherwise ignore e2
   if (inherits(e2, "element_blank")) {
-    if (e1$inherit.blank) return(e2)
-    else return(e1)
+    if (e1$inherit.blank) {
+      return(e2)
+    } else {
+      return(e1)
+    }
   }
 
   # If e1 has any NULL properties, inherit them from e2

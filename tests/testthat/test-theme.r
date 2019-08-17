@@ -1,5 +1,7 @@
 context("Themes")
 
+skip_on_cran() # This test suite is long-running (on cran) and is skipped
+
 test_that("modifying theme element properties with + operator works", {
 
   # Changing a "leaf node" works
@@ -213,6 +215,12 @@ test_that("elements can be merged", {
   )
 })
 
+test_that("theme elements that don't inherit from element can be combined", {
+  expect_identical(combine_elements(1, NULL), 1)
+  expect_identical(combine_elements(NULL, 1), 1)
+  expect_identical(combine_elements(1, 0), 1)
+})
+
 test_that("complete plot themes shouldn't inherit from default", {
   default_theme <- theme_gray() + theme(axis.text.x = element_text(colour = "red"))
   base <- qplot(1, 1)
@@ -352,6 +360,23 @@ test_that("axes can be styled independently", {
       axis.line.y.right = element_line(colour = 'yellow')
     )
   expect_doppelganger("axes_styling", plot)
+})
+
+test_that("axes ticks can have independent lengths", {
+  plot <- ggplot() +
+    theme_test() +
+    geom_point(aes(1:10, 1:10)) +
+    scale_x_continuous(sec.axis = dup_axis()) +
+    scale_y_continuous(sec.axis = dup_axis()) +
+    theme(
+      axis.ticks.length.x.top = unit(-.5, "cm"),
+      axis.ticks.length.x.bottom = unit(-.25, "cm"),
+      axis.ticks.length.y.left = unit(.25, "cm"),
+      axis.ticks.length.y.right = unit(.5, "cm"),
+      axis.text.x.bottom = element_text(margin = margin(t = .5, unit = "cm")),
+      axis.text.x.top = element_text(margin = margin(b = .75, unit = "cm"))
+    )
+  expect_doppelganger("ticks_length", plot)
 })
 
 test_that("strips can be styled independently", {

@@ -215,7 +215,7 @@ element_grob.element_text <- function(element, label = "", x = NULL, y = NULL,
 
   titleGrob(label, x, y, hjust = hj, vjust = vj, angle = angle,
     gp = modify_list(element_gp, gp), margin = margin,
-    margin_x = margin_x, margin_y = margin_y, debug = element$debug)
+    margin_x = margin_x, margin_y = margin_y, debug = element$debug, ...)
 }
 
 
@@ -292,6 +292,12 @@ el_def <- function(class = NULL, inherit = NULL, description = NULL) {
   axis.text.y.left    = el_def("element_text", "axis.text.y"),
   axis.text.y.right   = el_def("element_text", "axis.text.y"),
   axis.ticks.length   = el_def("unit"),
+  axis.ticks.length.x = el_def("unit", "axis.ticks.length"),
+  axis.ticks.length.x.top = el_def("unit", "axis.ticks.length.x"),
+  axis.ticks.length.x.bottom = el_def("unit", "axis.ticks.length.x"),
+  axis.ticks.length.y  = el_def("unit", "axis.ticks.length"),
+  axis.ticks.length.y.left = el_def("unit", "axis.ticks.length.y"),
+  axis.ticks.length.y.right = el_def("unit", "axis.ticks.length.y"),
   axis.ticks.x        = el_def("element_line", "axis.ticks"),
   axis.ticks.x.top    = el_def("element_line", "axis.ticks.x"),
   axis.ticks.x.bottom = el_def("element_line", "axis.ticks.x"),
